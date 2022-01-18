@@ -6,5 +6,5 @@ import 'virtual:windi.css'
 
 createApp(App).use(createRouter({
   routes: routes,
-  history: createWebHistory()
+  history: createWebHashHistory()
 })).mount('#app')
