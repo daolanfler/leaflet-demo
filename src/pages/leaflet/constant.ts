@@ -3,7 +3,7 @@ export const MAP_CENTER = [35.49174155526285, 112.85843755668577];
 export const MAPBOX_TOKEN =
   "pk.eyJ1IjoiZGFvbGFuZmxlciIsImEiOiJja3hhMGc3emIxd3YzMnBvNWZndDE0dHhuIn0.4enQ9KZsROgfE1bXbk10eA";
 
-export const statesData = {
+export const statesData: GeoJSON.FeatureCollection = {
   type: "FeatureCollection",
   features: [
     {
