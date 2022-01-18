@@ -1,9 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <template>
   <div class="page">
-    <div class="link-wrapper">
-      <router-link to="/maptalk">maptalk</router-link>
+    <div  class="text-xl py-2 flex justify-center">
+      <router-link to="/maptalk" class="mr-4" >maptalk</router-link>
       <router-link to="/leaflet">leaflet</router-link>
     </div>
     <router-view></router-view>
@@ -15,10 +16,8 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
-.link-wrapper {
-  margin-bottom: 24px;
+.router-link-active {
+  @apply text-blue-500;
 }
 </style>
