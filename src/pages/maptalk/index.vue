@@ -1,20 +1,24 @@
 <template>
   <div class="map-wrapper">
-    <el-select style="width: 300px" v-model="tile" @change="changeTile">
-      <el-option
-        v-for="item in list"
-        :key="item.value"
-        :value="item.value"
-        :label="item.label"
-      ></el-option>
-    </el-select>
+    <NSpace style="margin-bottom: 8px;">
+      <NSelect
+        placeholder="请选择瓦片服务版本"
+        style="width: 200px"
+        v-model:value="tile"
+        @change="changeTile"
+        :options="list"
+      >
+      </NSelect>
+    </NSpace>
     <div id="map"></div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import * as maptalks from "maptalks";
 import moment from "moment";
+import { onMounted, ref } from "vue";
+import { NSelect, NSpace } from "naive-ui";
 
 const udt = moment().format("YYYYMMDD");
 console.log(udt);
@@ -25,65 +29,54 @@ const center = [112.85843755668577, 35.49174155526285];
 const tileUrl3 = `http://maponline{s}.bdimg.com/tile/?qt=vtile&x={x}&y={y}&z={z}&styles=pl&scaler=1&udt=20211208`;
 const tileUrl2 = `https://gss{s}.bdstatic.com/8bo_dTSlRsgBo1vgoIiO_jowehsv/tile/?qt=tile&x={x}&y={y}&z={z}&styles=pl&scaler=1&udt=${udt}`;
 
-export default {
-  name: "MapdemoIndex",
-  data() {
-    return {
-      tile: tileUrl3,
-      /** @type {maptalks.Map} */
-      map: null,
-      list: [
-        {
-          label: "2.0",
-          value: tileUrl2
-        },
-        {
-          label: "3.0",
-          value: tileUrl3
-        }
-      ]
-    };
+const tile = ref<string>(tileUrl3);
+const map = ref<maptalks.Map>();
+const list = [
+  {
+    label: "百度地图2.0瓦片服务",
+    value: tileUrl2,
   },
-  methods: {
-    changeTile(val) {
-      const layer = new maptalks.TileLayer("base", {
-        urlTemplate: val,
-        subdomains: [0, 1, 2, 3],
-        attribution:
-          '&copy; <a target="_blank" href="http://map.baidu.com">Baidu</a>'
-      });
-      this.map.setBaseLayer(layer);
-    }
+  {
+    label: "百度地图3.0瓦片服务",
+    value: tileUrl3,
   },
-  mounted() {
-    const map = new maptalks.Map("map", {
-      center,
-      zoom: 14,
-      minZoom: 1,
-      maxZoom: 19,
-      draggable: true,
-      scaleControl: true,
-      zoomControl: true,
-      dragRotate: false,
-      dragPitch: false,
-      dragRotatePitch: false,
+];
+function changeTile(val: string) {
+  const layer = new maptalks.TileLayer("base", {
+    urlTemplate: val,
+    subdomains: [0, 1, 2, 3],
+    attribution:
+      '&copy; <a target="_blank" href="http://map.baidu.com">Baidu</a>',
+  });
+  map.value!.setBaseLayer(layer);
+}
+
+onMounted(() => {
+  map.value = new maptalks.Map("map", {
+    center,
+    zoom: 14,
+    minZoom: 1,
+    maxZoom: 19,
+    draggable: true,
+    scaleControl: true,
+    zoomControl: true,
+    dragRotate: false,
+    dragPitch: false,
+    dragRotatePitch: false,
+    spatialReference: {
+      projection: "baidu",
+    },
+    baseLayer: new maptalks.TileLayer("base", {
+      urlTemplate: tile.value,
+      subdomains: [0, 1, 2, 3],
       spatialReference: {
-        projection: "baidu"
+        projection: "BAIDU",
       },
-      baseLayer: new maptalks.TileLayer("base", {
-        urlTemplate: this.tile,
-        subdomains: [0, 1, 2, 3],
-        spatialReference: {
-          projection: "BAIDU"
-        },
-        attribution:
-          '&copy; <a target="_blank" href="http://map.baidu.com">Baidu</a>'
-      })
-    });
-    this.map = map;
-  },
-  created() {}
-};
+      attribution:
+        '&copy; <a target="_blank" href="http://map.baidu.com">Baidu</a>',
+    }),
+  });
+});
 </script>
 
 <style scoped>
@@ -93,6 +86,6 @@ export default {
 }
 #map {
   width: 100%;
-  height: calc(100vh - 60px)
+  height: calc(100vh - 100px);
 }
 </style>
