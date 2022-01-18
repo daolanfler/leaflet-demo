@@ -2,12 +2,17 @@
   <div class="wrapper">
     <div id="map"></div>
     <div style="margin-top: 12px">
-    <NSpace >
-      <NButton @click="basicMarker" strong secondary type="primary">Baic</NButton>
-      <NButton @click="addGeoJSON" strong secondary type="primary">GeoJSON</NButton>
-      <NButton @click="choropleth" strong secondary type="primary">choropleth</NButton>
-
-    </NSpace>
+      <NSpace>
+        <NButton @click="basicMarker" strong secondary type="primary"
+          >Baic</NButton
+        >
+        <NButton @click="addGeoJSON" strong secondary type="primary"
+          >GeoJSON</NButton
+        >
+        <NButton @click="choropleth" strong secondary type="primary"
+          >choropleth</NButton
+        >
+      </NSpace>
     </div>
   </div>
 </template>
@@ -184,6 +189,7 @@ function addGeoJSON() {
     opacity: 0.65,
   };
 
+  // @ts-ignore
   L.geoJSON([geojsonFeature, ...myLines], { style: myStyle }).addTo(map.value!);
 
   var states: GeoJSON.Feature[] = [
@@ -221,6 +227,7 @@ function addGeoJSON() {
     },
   ];
 
+  // @ts-ignore
   L.geoJSON(states, {
     style: function (feature: GeoJSON.Feature) {
       switch (feature.properties!.party) {
@@ -296,6 +303,7 @@ function addGeoJSON() {
     },
   ];
 
+  // @ts-ignore
   L.geoJSON(someFeatures, {
     filter: function (feature: GeoJSON.Feature, layer: L.Layer) {
       return feature.properties!.show_on_map;
