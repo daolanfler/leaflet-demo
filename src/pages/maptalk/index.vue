@@ -5,7 +5,7 @@
         placeholder="请选择瓦片服务版本"
         style="width: 200px"
         v-model:value="tile"
-        @upate:value="changeTile"
+        @update:value="changeTile"
         :options="list"
       >
       </NSelect>
