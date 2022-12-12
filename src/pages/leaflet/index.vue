@@ -4,13 +4,13 @@
     <div style="margin-top: 12px">
       <NSpace>
         <NButton @click="basicMarker" strong secondary type="primary"
-          >Baic</NButton
+          >Marker/Polyline/Polygon</NButton
         >
         <NButton @click="addGeoJSON" strong secondary type="primary"
-          >GeoJSON</NButton
+          >简单的 GeoJSON</NButton
         >
         <NButton @click="choropleth" strong secondary type="primary"
-          >choropleth</NButton
+          >choropleth(等值线)</NButton
         >
       </NSpace>
     </div>
@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { GeoJsonProperties } from "geojson";
 import L, { LeafletMouseEvent, PathOptions, StyleFunction } from "leaflet";
 import "leaflet.chinatmsproviders";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
@@ -27,7 +28,7 @@ import "leaflet/dist/leaflet.css";
 import { NButton, NSpace } from "naive-ui";
 import "proj4";
 import "proj4leaflet";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, shallowRef } from "vue";
 import { MAPBOX_TOKEN, statesData } from "./constant";
 
 // https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-48340269kjk9
@@ -39,10 +40,16 @@ L.Icon.Default.mergeOptions({
   shadowUrl,
 });
 
-const map = ref<L.Map>();
+const map = shallowRef<L.Map>();
+
+const choroplethLayer = shallowRef<L.GeoJSON<GeoJsonProperties>>();
+const basicLayer = shallowRef();
+const geoJSONLayer = shallowRef<L.GeoJSON<any>>();
 
 function choropleth() {
   map.value!.setView([37.8, -96], 4);
+  geoJSONLayer.value?.remove() && (geoJSONLayer.value = undefined);
+  if (choroplethLayer.value) return;
   function getColor(d: number) {
     return d > 1000
       ? "#800026"
@@ -87,7 +94,7 @@ function choropleth() {
     (info as any).update(layer.feature.properties);
   }
   function resetHighlight(e: LeafletMouseEvent) {
-    geojson.resetStyle(e.target);
+    choroplethLayer.value?.resetStyle(e.target);
     (info as any).update();
   }
   function zoomToFeature(e: LeafletMouseEvent) {
@@ -147,13 +154,16 @@ function choropleth() {
 
   legend.addTo(map.value!);
 
-  const geojson = L.geoJSON(statesData, {
+  choroplethLayer.value = L.geoJSON(statesData, {
     style: style as StyleFunction,
     onEachFeature: onEachFeature,
   }).addTo(map.value!);
 }
 
 function addGeoJSON() {
+  map.value!.panTo({ lat: 39, lng: -104 }).setZoom(4);
+  choroplethLayer.value?.remove() && (choroplethLayer.value = undefined);
+  if (geoJSONLayer.value) return;
   var geojsonFeature: GeoJSON.Feature = {
     type: "Feature",
     properties: {
@@ -309,13 +319,11 @@ function addGeoJSON() {
   ];
 
   // @ts-ignore
-  L.geoJSON(someFeatures, {
+  geoJSONLayer.value = L.geoJSON(someFeatures, {
     filter: function (feature: GeoJSON.Feature, layer: L.Layer) {
       return feature.properties!.show_on_map;
     },
   }).addTo(map.value!);
-
-  map.value!.panTo({ lat: 39, lng: -104 }).setZoom(8);
 }
 
 function basicMarker() {
@@ -334,6 +342,9 @@ function basicMarker() {
       }
     ).addTo(map.value!);
   }
+
+  map.value.setView([51.508, -0.11], 13);
+  if (basicLayer.value) return;
 
   var circle = L.circle([51.508, -0.11], {
     color: "red",
@@ -377,6 +388,11 @@ function basicMarker() {
   }
 
   map.value!.on("click", onMapClick);
+  basicLayer.value = {
+    marker,
+    circle,
+    polygon,
+  };
 }
 
 onMounted(() => {
