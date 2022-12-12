@@ -19,21 +19,25 @@
 
 <script lang="ts" setup>
 import L, { LeafletMouseEvent, PathOptions, StyleFunction } from "leaflet";
+import "leaflet.chinatmsproviders";
+import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import iconUrl from "leaflet/dist/images/marker-icon.png";
+import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/leaflet.css";
+import { NButton, NSpace } from "naive-ui";
 import "proj4";
 import "proj4leaflet";
-import "leaflet.chinatmsproviders";
-import "leaflet/dist/leaflet.css";
-import { MAPBOX_TOKEN, MAP_CENTER, statesData } from "./constant";
-import { NButton, NSpace } from "naive-ui";
-import Vue, { onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
+import { MAPBOX_TOKEN, statesData } from "./constant";
 
 // https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-48340269kjk9
-// delete L.Icon.Default.prototype._getIconUrl;
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-//   iconUrl: require("leaflet/dist/images/marker-icon.png"),
-//   shadowUrl: require("leaflet/dist/images/marker-shadow.png")
-// });
+delete (L.Icon as any).Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+});
 
 const map = ref<L.Map>();
 
@@ -229,13 +233,14 @@ function addGeoJSON() {
 
   // @ts-ignore
   L.geoJSON(states, {
-    style: function (feature: GeoJSON.Feature) {
-      switch (feature.properties!.party) {
+    style: (feature?: GeoJSON.Feature<GeoJSON.GeometryObject, any>) => {
+      switch (feature?.properties.party) {
         case "Republican":
           return { color: "#ff0000" };
         case "Democrat":
           return { color: "#0000ff" };
       }
+      return {};
     },
   }).addTo(map.value!);
 

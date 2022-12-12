@@ -16,12 +16,11 @@
 
 <script lang="ts" setup>
 import * as maptalks from "maptalks";
-import moment from "moment";
 import { onMounted, ref } from "vue";
 import { NSelect, NSpace } from "naive-ui";
+import dayjs from 'dayjs'
 
-const udt = moment().format("YYYYMMDD");
-console.log(udt);
+const udt = dayjs().format("YYYYMMDD");
 
 const center = [112.85843755668577, 35.49174155526285];
 // http://maponline{s}.bdimg.com/tile/?qt=vtile&x={x}&y={y}&z={z}&styles=pl&scaler=1&udt=20211208
