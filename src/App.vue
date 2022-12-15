@@ -4,8 +4,8 @@
 <template>
   <div class="page">
     <div  class="text-xl py-2 flex justify-center">
-      <router-link to="/leaflet" class="mr-4">leaflet</router-link>
-      <router-link to="/maptalk" class="mr-4" >maptalk</router-link>
+      <router-link to="/leaflet" class="mr-4">Leaflet</router-link>
+      <router-link to="/maptalk" class="mr-4" >Maptalk</router-link>
     </div>
     <router-view></router-view>
   </div>
