@@ -42,6 +42,7 @@ onMounted(() => {
         0.5527222421370013
       ),
     },
+    // @ts-ignore
     easingFunction: Cesium.EasingFunction.QUADRATIC_IN_OUT,
   });
 

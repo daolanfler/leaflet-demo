@@ -21,6 +21,7 @@ onMounted(() => {
 
   // Adjust the camera to look at Melbourne
   viewer.camera.lookAt(
+    // @ts-ignore
     new Cesium.Cartesian3.fromDegrees(144.96007, -37.82249),
     new Cesium.Cartesian3(0.0, -1500.0, 1200.0)
   );
@@ -67,7 +68,7 @@ onMounted(() => {
     });
   }
 
-  var menu = document.getElementById("dropdown");
+  var menu = document.getElementById("dropdown") as any;
 
   menu.options[0].onselect = function () {
     applyBasicStyle();

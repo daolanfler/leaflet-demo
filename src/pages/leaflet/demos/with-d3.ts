@@ -1,6 +1,5 @@
 import L from "leaflet";
 import { useMap } from "../useMap";
-import { GeoJSON } from "geojson";
 import * as d3 from "d3";
 
 import collection from "./jsons/geojson-d3.json";

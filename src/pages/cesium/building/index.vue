@@ -7,7 +7,7 @@
 import * as Cesium from "cesium";
 import { onMounted, ref } from "vue";
 
-const newBuilding = ref(null);
+const newBuilding = ref<any>();
 
 onMounted(() => {
   // Initialize the viewer with Cesium World Terrain.
@@ -37,6 +37,7 @@ onMounted(() => {
     // By default, polygons in CesiumJS will be draped over all 3D content in the scene.
     // Modify the polygons so that this draping only applies to the terrain, not 3D buildings.
     for (const entity of dataSource.entities.values) {
+      // @ts-ignore
       entity.polygon.classificationType = Cesium.ClassificationType.TERRAIN;
     }
     // Move the camera so that the polygon is in view.
@@ -82,7 +83,7 @@ onMounted(() => {
 });
 
 function toggleBuilding() {
-  newBuilding.value.show = !newBuilding.value.show
+  newBuilding.value!.show = !newBuilding.value!.show
 }
 
 </script>
