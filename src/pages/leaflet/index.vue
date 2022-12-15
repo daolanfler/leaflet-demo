@@ -12,6 +12,9 @@
         <NButton @click="addChoropleth" strong secondary type="primary"
           >choropleth(等值线)</NButton
         >
+        <NButton @click="addD3Layer" strong secondary type="primary"
+          >D3</NButton
+        >
       </NSpace>
     </div>
   </div>
@@ -32,6 +35,7 @@ import { MAPBOX_TOKEN } from "./constant";
 import { setBasicMarker } from "./demos/basic";
 import { addChoropleth } from "./demos/choropleth";
 import { addGeoJSON } from "./demos/geoJSON";
+import { addD3Layer } from "./demos/with-d3";
 import { useMap } from "./useMap";
 
 // https://github.com/Leaflet/Leaflet/issues/4968#issuecomment-48340269kjk9
@@ -61,6 +65,7 @@ function initMap() {
       }
     ).addTo(map.value!);
   }
+  return map;
 }
 
 onUnmounted(() => {
@@ -72,6 +77,11 @@ onUnmounted(() => {
 
 onMounted(() => {
   initMap();
+  const [map, setMap] = useMap();
+  map.value!.on("viewreset", () => {
+    console.log("resset viwer");
+  });
+
   setBasicMarker();
 });
 </script>
@@ -106,5 +116,39 @@ onMounted(() => {
   float: left;
   margin-right: 8px;
   opacity: 0.7;
+}
+/* // for the d3 */
+svg {
+  position: relative;
+}
+path {
+  fill: yellow;
+  stroke-width: 2px;
+  stroke: red;
+  stroke-opacity: 1;
+}
+.travelMarker {
+  fill: yellow;
+  opacity: 0.75;
+}
+.waypoints {
+  fill: black;
+  opacity: 0;
+}
+
+.drinks {
+  stroke: black;
+  fill: red;
+}
+.lineConnect {
+  fill: none;
+  stroke: black;
+  opacity: 1;
+}
+.locnames {
+  fill: black;
+  text-shadow: 1px 1px 1px #fff, 3px 3px 5px #000;
+  font-weight: bold;
+  font-size: 13px;
 }
 </style>
