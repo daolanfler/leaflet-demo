@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
+import { routes as cesiumRoute } from "./pages/cesium/router";
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -13,4 +14,5 @@ export const routes: RouteRecordRaw[] = [
     path: "/leaflet",
     component: () => import("./pages/leaflet/index.vue"),
   },
+  ...cesiumRoute,
 ];
