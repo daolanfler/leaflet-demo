@@ -69,7 +69,7 @@ export function addD3Layer() {
     .append("path")
     .attr("class", "lineConnect");
 
-  const markder = g
+  const marker = g
     .append("circle")
     .attr("r", 10)
     .attr("id", "marker")
@@ -116,7 +116,7 @@ export function addD3Layer() {
       (d) => `translate(${applyLatLngToLayer(d).x}, ${applyLatLngToLayer(d).y})`
     );
 
-    markder.attr("transform", () => {
+    marker.attr("transform", () => {
       const y = featuresdata[0].geometry.coordinates[1];
       const x = featuresdata[0].geometry.coordinates[0];
       return `translate(${
@@ -147,12 +147,13 @@ export function addD3Layer() {
   function tweenDash() {
     return function (t: number) {
       const l = linePath.node()?.getTotalLength() as number;
+      
 
       const interpolate = d3.interpolateString(`0,${l}`, `${l},${l}`);
       const marker = d3.select("#marker");
       const p = linePath.node()?.getPointAtLength(t * l)!;
 
-      markder.attr("transform", `translate(${p.x}, ${p.y})`);
+      marker.attr("transform", `translate(${p.x}, ${p.y})`);
       // console.log(interpolate(t));
       return interpolate(t);
     };
@@ -161,4 +162,5 @@ export function addD3Layer() {
   map.value!.on("zoom", reset);
   reset();
   transition();
+  console.log(linePath);
 }
